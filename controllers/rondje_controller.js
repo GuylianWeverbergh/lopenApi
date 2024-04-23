@@ -18,16 +18,36 @@ const rondjeController = {
         try {
             const connection = await mysql.createConnection(dbConfig);
     
-            // Find the highest Volgorde for the specific Club
-            const highestVolgordeQuery = 'SELECT MAX(Volgorde) AS MaxVolgorde FROM Rondje WHERE Club = ?';
-            const [maxVolgordeResult] = await connection.query(highestVolgordeQuery, [req.body.Club]);
-            let maxVolgorde = maxVolgordeResult[0].MaxVolgorde || 0;
+            // Retrieve the timestamp of the last occurrence of the club
+            const lastOccurrenceQuery = 'SELECT MAX(Timestamp) AS LastTimestamp FROM Rondje WHERE Club = ?';
+            const [lastOccurrenceResult] = await connection.query(lastOccurrenceQuery, [req.body.Club]);
+            const lastTimestamp = lastOccurrenceResult[0].LastTimestamp;
     
-            // Ensure Volgorde can't be less than 5 less than the highest value
-            const minAllowedVolgorde = Math.max(1, maxVolgorde - 3);
+            // Calculate the current timestamp
+            const currentTimestamp = new Date();
+            
+            // Calculate the time difference in minutes
+            const timeDifference = lastTimestamp ? Math.abs(currentTimestamp - lastTimestamp) / (1000 * 60) : Infinity;
     
-            // Increment the Volgorde for the new Rondje
-            let volgorde = Math.max(minAllowedVolgorde, maxVolgorde + 1);
+            let volgorde;
+    
+            if (timeDifference > 10) {
+                // Find the highest Volgorde for the specific Club
+                const highestVolgordeQuery = 'SELECT MAX(Volgorde) AS MaxVolgorde FROM Rondje WHERE Club = ?';
+                const [maxVolgordeResult] = await connection.query(highestVolgordeQuery, [req.body.Club]);
+                let maxVolgorde = maxVolgordeResult[0].MaxVolgorde || 0;
+    
+                // Ensure Volgorde can't be less than 5 less than the highest value
+                const minAllowedVolgorde = Math.max(1, maxVolgorde - 1);
+    
+                // Increment the Volgorde for the new Rondje
+                volgorde = Math.max(minAllowedVolgorde, maxVolgorde + 1);
+            } else {
+                const highestVolgordeQuery = 'SELECT MAX(Volgorde) AS MaxVolgorde FROM Rondje WHERE Club = ?';
+                const [maxVolgordeResult] = await connection.query(highestVolgordeQuery, [req.body.Club]);
+                let maxVolgorde = maxVolgordeResult[0].MaxVolgorde || 0;
+                volgorde = maxVolgorde + 1; // Assuming lastVolgorde is retrieved from the database
+            }
     
             const data = {
                 Lid_id: req.body.Lid_id,
