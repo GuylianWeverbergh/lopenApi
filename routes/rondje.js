@@ -61,7 +61,7 @@ router.get('/volgorde', async (req, res) => {
       SELECT *
       FROM Rondje
       WHERE Gelopen = 0
-      ORDER BY Volgorde, Timestamp
+      ORDER BY Volgorde, Club
       LIMIT 50;
   `;
 
