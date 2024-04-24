@@ -38,7 +38,7 @@ const rondjeController = {
             console.log("currentTimestampDate: " + currentTimestamp);
             console.log("timedif: " + timeDifference);
 
-            if (timeDifference > 300000) { // 600000 milliseconds = 10 minutes
+            if (timeDifference > 150000) { // 600000 milliseconds = 10 minutes
                 // Find the highest Volgorde for the specific Club
                 const highestVolgordeQuery = 'SELECT MAX(Volgorde) AS MaxVolgorde FROM Rondje';
                 const [maxVolgordeResult] = await connection.query(highestVolgordeQuery, [req.body.Club]);
