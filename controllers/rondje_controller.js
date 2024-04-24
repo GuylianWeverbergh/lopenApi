@@ -6,7 +6,7 @@ const key = process.env.JWT_SECRET */
 const rondjeController = {
     readAll: () => { },
 
-            create: async (req, res) => {
+       create: async (req, res) => {
         // Validate required fields
         const requiredFields = ['Lid_id', 'Club'];
         const missingFields = requiredFields.filter(field => !req.body[field]);
@@ -25,7 +25,9 @@ const rondjeController = {
             
     
             // Calculate the current timestamp
-            const currentTimestamp = new Date();
+            const currentTimestamp = new Date().toLocaleString('be', {
+                timeZone: "Europe/Brussels",
+              });
             console.log("lastTimestamp:" + lastTimestamp + "current: " + currentTimestamp+ (currentTimestamp-lastTimestamp));
             // Calculate the time difference in minutes
             const timeDifference = lastTimestamp ? Math.abs(currentTimestamp - lastTimestamp) / (1000 * 60) : Infinity;
