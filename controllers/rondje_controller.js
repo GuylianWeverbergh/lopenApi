@@ -6,7 +6,7 @@ const key = process.env.JWT_SECRET */
 const rondjeController = {
     readAll: () => { },
 
-        create: async (req, res) => {
+         create: async (req, res) => {
         // Validate required fields
         const requiredFields = ['Lid_id', 'Club'];
         const missingFields = requiredFields.filter(field => !req.body[field]);
@@ -30,7 +30,7 @@ const rondjeController = {
             const lastTimestampDate = new Date(lastTimestamp).getTime();
 
             // Calculate the time difference in milliseconds
-            const timeDifference = lastTimestampDate ? Math.abs(currentTimestamp - lastTimestampDate.getTime()) : Infinity;
+            const timeDifference = lastTimestampDate ? Math.abs(currentTimestamp - lastTimestampDate) : Infinity;
 
             let volgorde;
 
