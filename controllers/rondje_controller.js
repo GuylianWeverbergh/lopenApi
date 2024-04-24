@@ -26,7 +26,7 @@ const rondjeController = {
     
             // Calculate the current timestamp
             const currentTimestamp = new Date();
-            console.log("lastTimestamp:" + lastTimestamp + "current: " + currentTimestamp+ (currentTimestamp-currentTimestamp));
+            console.log("lastTimestamp:" + lastTimestamp + "current: " + currentTimestamp+ (currentTimestamp-lastTimestamp));
             // Calculate the time difference in minutes
             const timeDifference = lastTimestamp ? Math.abs(currentTimestamp - lastTimestamp) / (1000 * 60) : Infinity;
             console.log("timedifference:" + timeDifference);
@@ -43,14 +43,14 @@ const rondjeController = {
                 const minAllowedVolgorde = Math.max(1, maxVolgorde - 1);
     
                 // Increment the Volgorde for the new Rondje
-                console.log("bigger than 10" + minAllowedVolgorde + maxVolgorde);
-                volgorde = Math.max(minAllowedVolgorde, maxVolgorde + 1);
+                console.log("bigger than 10" + minAllowedVolgorde + 1);
+                volgorde = minAllowedVolgorde + 1;
                 
             } else {
                 const highestVolgordeQuery = 'SELECT MAX(Volgorde) AS MaxVolgorde FROM Rondje WHERE Club = ?';
                 const [maxVolgordeResult] = await connection.query(highestVolgordeQuery, [req.body.Club]);
                 let maxVolgorde = maxVolgordeResult[0].MaxVolgorde || 0;
-                console.log("smaller than 10");
+                console.log("smaller than 10" + "max volgorde is: " + maxVolgorde);
                 volgorde = maxVolgorde + 1; // Assuming lastVolgorde is retrieved from the database
             }
     
