@@ -6,7 +6,7 @@ const key = process.env.JWT_SECRET */
 const rondjeController = {
     readAll: () => { },
 
-    create: async (req, res) => {
+        create: async (req, res) => {
         // Validate required fields
         const requiredFields = ['Lid_id', 'Club'];
         const missingFields = requiredFields.filter(field => !req.body[field]);
@@ -23,39 +23,33 @@ const rondjeController = {
             const [lastOccurrenceResult] = await connection.query(lastOccurrenceQuery, [req.body.Club]);
             const lastTimestamp = lastOccurrenceResult[0].LastTimestamp;
 
-
+            // Calculate the current timestamp
             const currentTimestamp = new Date().toLocaleString('be', {
                 timeZone: "Europe/Brussels",
             });
 
+            // Convert timestamp strings to Date objects
+            const lastTimestampDate = new Date(lastTimestamp);
             const currentTimestampDate = new Date(currentTimestamp);
 
-            console.log("lastTimestamp:" + lastTimestamp + "current: " + currentTimestampDate + (currentTimestampDate - lastTimestamp));
-            // Calculate the time difference in minutes
-            const timeDifference = lastTimestamp ? Math.abs(currentTimestampDate - lastTimestamp) / (1000 * 60) : Infinity;
-            console.log("timedifference:" + timeDifference);
+            // Calculate the time difference in milliseconds
+            const timeDifference = lastTimestampDate ? Math.abs(currentTimestampDate - lastTimestampDate) : Infinity;
 
             let volgorde;
 
-            if (timeDifference > 10) {
+            if (timeDifference > 600000) { // 600000 milliseconds = 10 minutes
                 // Find the highest Volgorde for the specific Club
                 const highestVolgordeQuery = 'SELECT MAX(Volgorde) AS MaxVolgorde FROM Rondje WHERE Club = ?';
                 const [maxVolgordeResult] = await connection.query(highestVolgordeQuery, [req.body.Club]);
                 let maxVolgorde = maxVolgordeResult[0].MaxVolgorde || 0;
 
-                // Ensure Volgorde can't be less than 5 less than the highest value
-                const minAllowedVolgorde = Math.max(1, maxVolgorde - 1);
-
                 // Increment the Volgorde for the new Rondje
-                console.log("bigger than 10" + minAllowedVolgorde + 1);
-                volgorde = minAllowedVolgorde + 1;
-
+                volgorde = maxVolgorde + 1;
             } else {
                 const highestVolgordeQuery = 'SELECT MAX(Volgorde) AS MaxVolgorde FROM Rondje WHERE Club = ?';
                 const [maxVolgordeResult] = await connection.query(highestVolgordeQuery, [req.body.Club]);
                 let maxVolgorde = maxVolgordeResult[0].MaxVolgorde || 0;
-                console.log("smaller than 10" + "max volgorde is: " + maxVolgorde);
-                volgorde = maxVolgorde + 1; // Assuming lastVolgorde is retrieved from the database
+                volgorde = maxVolgorde + 1;
             }
 
             const data = {
