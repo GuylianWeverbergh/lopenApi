@@ -24,21 +24,15 @@ const rondjeController = {
             const lastTimestamp = lastOccurrenceResult[0].LastTimestamp;
 
 
-            // Calculate the current timestamp
-            const lastTimestamp2 = new Date(lastTimestamp).toLocaleString('be', {
-                timeZone: "Europe/Brussels",
-            });
             const currentTimestamp = new Date().toLocaleString('be', {
                 timeZone: "Europe/Brussels",
             });
 
-            // Convert timestamp strings back to Date objects
-            const lastTimestampDate = new Date(lastTimestamp);
             const currentTimestampDate = new Date(currentTimestamp);
 
-            console.log("lastTimestamp:" + lastTimestampDate + "current: " + currentTimestampDate + (currentTimestampDate - lastTimestampDate));
+            console.log("lastTimestamp:" + lastTimestamp + "current: " + currentTimestampDate + (currentTimestampDate - lastTimestamp));
             // Calculate the time difference in minutes
-            const timeDifference = lastTimestampDate ? Math.abs(currentTimestampDate - lastTimestampDate) / (1000 * 60) : Infinity;
+            const timeDifference = lastTimestamp ? Math.abs(currentTimestampDate - lastTimestamp) / (1000 * 60) : Infinity;
             console.log("timedifference:" + timeDifference);
 
             let volgorde;
@@ -89,7 +83,6 @@ const rondjeController = {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     },
-
     
     
     
