@@ -25,10 +25,10 @@ const rondjeController = {
 
             // Convert timestamp strings to Date objects
             const lastTimestampDate = new Date(lastTimestamp);
-            const currentTimestampDate = new Date();
+            const currentTimestampDate = new Date() + 720000;
 
             // Calculate the time difference in milliseconds
-            const timeDifference = lastTimestampDate ? Math.abs((currentTimestampDate  + 7200000)- lastTimestampDate) : Infinity;
+            const timeDifference = lastTimestampDate ? Math.abs(currentTimestampDate - lastTimestampDate) : Infinity;
 
             let volgorde;
             console.log("lastTimestampDate: " + lastTimestampDate)
