@@ -6,7 +6,7 @@ const key = process.env.JWT_SECRET */
 const rondjeController = {
     readAll: () => { },
 
-        create: async (req, res) => {
+            create: async (req, res) => {
         // Validate required fields
         const requiredFields = ['Lid_id', 'Club'];
         const missingFields = requiredFields.filter(field => !req.body[field]);
@@ -22,11 +22,11 @@ const rondjeController = {
             const lastOccurrenceQuery = 'SELECT MAX(Timestamp) AS LastTimestamp FROM Rondje WHERE Club = ?';
             const [lastOccurrenceResult] = await connection.query(lastOccurrenceQuery, [req.body.Club]);
             const lastTimestamp = lastOccurrenceResult[0].LastTimestamp;
-            console.log("lastTimestamp:" + lastTimestamp);
+            
     
             // Calculate the current timestamp
             const currentTimestamp = new Date();
-            
+            console.log("lastTimestamp:" + lastTimestamp + "current: " + currentTimestamp+ (currentTimestamp-currentTimestamp));
             // Calculate the time difference in minutes
             const timeDifference = lastTimestamp ? Math.abs(currentTimestamp - lastTimestamp) / (1000 * 60) : Infinity;
             console.log("timedifference:" + timeDifference);
@@ -43,7 +43,7 @@ const rondjeController = {
                 const minAllowedVolgorde = Math.max(1, maxVolgorde - 1);
     
                 // Increment the Volgorde for the new Rondje
-                console.log("bigger than 10");
+                console.log("bigger than 10" + minAllowedVolgorde + maxVolgorde);
                 volgorde = Math.max(minAllowedVolgorde, maxVolgorde + 1);
                 
             } else {
