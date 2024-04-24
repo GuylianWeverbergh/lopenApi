@@ -6,7 +6,7 @@ const key = process.env.JWT_SECRET */
 const rondjeController = {
     readAll: () => { },
 
-        create: async (req, res) => {
+            create: async (req, res) => {
         // Validate required fields
         const requiredFields = ['Lid_id', 'Club'];
         const missingFields = requiredFields.filter(field => !req.body[field]);
@@ -36,13 +36,16 @@ const rondjeController = {
             const timeDifference = lastTimestampDate ? Math.abs(currentTimestampDate - lastTimestampDate) : Infinity;
 
             let volgorde;
+            console.log("lastTimestampDate: " + lastTimestampDate)
+            console.log("currentTimestampDate: " + currentTimestampDate)
+            console.log("timedif: " + timeDifference)
 
             if (timeDifference > 600000) { // 600000 milliseconds = 10 minutes
                 // Find the highest Volgorde for the specific Club
                 const highestVolgordeQuery = 'SELECT MAX(Volgorde) AS MaxVolgorde FROM Rondje WHERE Club = ?';
                 const [maxVolgordeResult] = await connection.query(highestVolgordeQuery, [req.body.Club]);
                 let maxVolgorde = maxVolgordeResult[0].MaxVolgorde || 0;
-
+                console.log("higher: " + volgorde)
                 // Increment the Volgorde for the new Rondje
                 volgorde = maxVolgorde + 1;
             } else {
@@ -50,6 +53,7 @@ const rondjeController = {
                 const [maxVolgordeResult] = await connection.query(highestVolgordeQuery, [req.body.Club]);
                 let maxVolgorde = maxVolgordeResult[0].MaxVolgorde || 0;
                 volgorde = maxVolgorde + 1;
+                console.log("lower: " + volgorde)
             }
 
             const data = {
